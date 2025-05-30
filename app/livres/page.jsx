@@ -5,6 +5,8 @@ import CategoryFilter from "@/components/book_page/CategoryFilter";
 import Pagination from "@/components/book_page/Pagination";
 import SearchAndSort from "@/components/book_page/SearchAndSort";
 import ShoppingCart from "@/components/book_page/ShoppingCart";
+import Footer from "@/components/footer/Footer";
+import Header from "@/components/header/Header";
 import { books } from "@/data/books";
 import { useEffect, useState } from "react";
 import { FaFacebook, FaInstagram, FaLinkedin, FaTwitter } from "react-icons/fa";
@@ -116,145 +118,154 @@ export default function LivresPage() {
     }
   }, [notification]);
 
-  return (
-    <main className="container mx-auto px-4 py-8">
-      {/* Notification */}
-      {notification && (
-        <div
-          className={`fixed top-4 right-4 p-4 rounded-lg shadow-lg z-50 ${
-            notification.type === "success" ? "bg-green-500" : "bg-blue-500"
-          } text-white`}
-        >
-          {notification.message}
-        </div>
-      )}
+  const categories = ["all", ...new Set(books.map((book) => book.category))];
 
-      {/* Hero Section */}
-      <div className="bg-blue-900 text-white rounded-xl p-8 mb-8">
-        <div className="max-w-4xl mx-auto">
-          <div className="flex justify-between items-start">
-            <div>
-              <h1 className="text-4xl font-bold mb-4">
-                Les Livres de Pierre Jovanovic
-              </h1>
-              <p className="text-xl mb-6">
-                Découvrez l'ensemble des ouvrages de Pierre Jovanovic, de ses
-                enquêtes sur les anges à ses analyses économiques.
+  return (
+    <>
+      <Header />
+      <main className="min-h-screen bg-gray-100 py-8">
+        <div className="container mx-auto px-4">
+          <h1 className="text-3xl font-bold text-blue-900 mb-8">Livres</h1>
+          {/* Notification */}
+          {notification && (
+            <div
+              className={`fixed top-4 right-4 p-4 rounded-lg shadow-lg z-50 ${
+                notification.type === "success" ? "bg-green-500" : "bg-blue-500"
+              } text-white`}
+            >
+              {notification.message}
+            </div>
+          )}
+
+          {/* Hero Section */}
+          <div className="bg-blue-900 text-white rounded-xl p-8 mb-8">
+            <div className="max-w-4xl mx-auto">
+              <div className="flex justify-between items-start">
+                <div>
+                  <h1 className="text-4xl font-bold mb-4">
+                    Les Livres de Pierre Jovanovic
+                  </h1>
+                  <p className="text-xl mb-6">
+                    Découvrez l'ensemble des ouvrages de Pierre Jovanovic, de
+                    ses enquêtes sur les anges à ses analyses économiques.
+                  </p>
+                </div>
+                <button
+                  onClick={() => setIsCartOpen(!isCartOpen)}
+                  className="relative p-2 text-white hover:bg-blue-800 rounded-lg"
+                >
+                  <HiShoppingCart className="w-8 h-8" />
+                  {cart.length > 0 && (
+                    <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                      {cart.length}
+                    </span>
+                  )}
+                </button>
+              </div>
+              <div className="flex flex-wrap gap-4">
+                <div className="flex items-center bg-blue-800 px-4 py-2 rounded-lg">
+                  <HiCalendar className="w-5 h-5 mr-2" />
+                  <span>Prochain rendez-vous : 31 mai 2025</span>
+                </div>
+                <div className="flex items-center bg-blue-800 px-4 py-2 rounded-lg">
+                  <HiLocationMarker className="w-5 h-5 mr-2" />
+                  <span>Centre Culturel Leclerc, Moisselles (95)</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Panier */}
+          <ShoppingCart
+            isOpen={isCartOpen}
+            onClose={() => setIsCartOpen(false)}
+            cart={cart}
+            onRemoveFromCart={removeFromCart}
+            cartTotal={cartTotal}
+          />
+
+          {/* Recherche et tri */}
+          <SearchAndSort
+            searchQuery={searchQuery}
+            onSearchChange={setSearchQuery}
+            sortBy={sortBy}
+            onSortChange={setSortBy}
+          />
+
+          {/* Filtres par catégorie */}
+          <CategoryFilter
+            selectedCategory={selectedCategory}
+            onCategoryChange={setSelectedCategory}
+          />
+
+          {/* Grille de livres */}
+          <BookGrid books={paginatedBooks} onAddToCart={addToCart} />
+
+          {/* Message si aucun résultat */}
+          {filteredBooks.length === 0 && (
+            <div className="text-center py-12">
+              <p className="text-xl text-gray-600">
+                Aucun livre ne correspond à votre recherche.
               </p>
             </div>
-            <button
-              onClick={() => setIsCartOpen(!isCartOpen)}
-              className="relative p-2 text-white hover:bg-blue-800 rounded-lg"
-            >
-              <HiShoppingCart className="w-8 h-8" />
-              {cart.length > 0 && (
-                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-                  {cart.length}
-                </span>
-              )}
-            </button>
-          </div>
-          <div className="flex flex-wrap gap-4">
-            <div className="flex items-center bg-blue-800 px-4 py-2 rounded-lg">
-              <HiCalendar className="w-5 h-5 mr-2" />
-              <span>Prochain rendez-vous : 31 mai 2025</span>
+          )}
+
+          {/* Pagination */}
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={handlePageChange}
+          />
+
+          {/* Social Media Section */}
+          <div className="mt-12 bg-gray-50 rounded-xl p-8">
+            <div className="max-w-4xl mx-auto">
+              <h2 className="text-2xl font-bold text-gray-900 mb-6">
+                Suivez Pierre Jovanovic
+              </h2>
+              <div className="flex flex-wrap gap-6 justify-center">
+                <a
+                  href="https://x.com/pierrejovanovic"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center text-gray-600 hover:text-blue-600"
+                >
+                  <FaTwitter className="w-6 h-6 mr-2" />
+                  <span>@pierrejovanovic</span>
+                </a>
+                <a
+                  href="https://www.linkedin.com/in/pierre-jovanovic-33260b23/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center text-gray-600 hover:text-blue-600"
+                >
+                  <FaLinkedin className="w-6 h-6 mr-2" />
+                  <span>Pierre Jovanovic</span>
+                </a>
+                <a
+                  href="https://www.instagram.com/jovapierre14/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center text-gray-600 hover:text-blue-600"
+                >
+                  <FaInstagram className="w-6 h-6 mr-2" />
+                  <span>@jovapierre14</span>
+                </a>
+                <a
+                  href="https://www.facebook.com/Pierre-Jovanovic-297361163288"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center text-gray-600 hover:text-blue-600"
+                >
+                  <FaFacebook className="w-6 h-6 mr-2" />
+                  <span>Page Facebook</span>
+                </a>
+              </div>
             </div>
-            <div className="flex items-center bg-blue-800 px-4 py-2 rounded-lg">
-              <HiLocationMarker className="w-5 h-5 mr-2" />
-              <span>Centre Culturel Leclerc, Moisselles (95)</span>
-            </div>
           </div>
         </div>
-      </div>
-
-      {/* Panier */}
-      <ShoppingCart
-        isOpen={isCartOpen}
-        onClose={() => setIsCartOpen(false)}
-        cart={cart}
-        onRemoveFromCart={removeFromCart}
-        cartTotal={cartTotal}
-      />
-
-      {/* Recherche et tri */}
-      <SearchAndSort
-        searchQuery={searchQuery}
-        onSearchChange={setSearchQuery}
-        sortBy={sortBy}
-        onSortChange={setSortBy}
-      />
-
-      {/* Filtres par catégorie */}
-      <CategoryFilter
-        selectedCategory={selectedCategory}
-        onCategoryChange={setSelectedCategory}
-      />
-
-      {/* Grille de livres */}
-      <BookGrid books={paginatedBooks} onAddToCart={addToCart} />
-
-      {/* Message si aucun résultat */}
-      {filteredBooks.length === 0 && (
-        <div className="text-center py-12">
-          <p className="text-xl text-gray-600">
-            Aucun livre ne correspond à votre recherche.
-          </p>
-        </div>
-      )}
-
-      {/* Pagination */}
-      <Pagination
-        currentPage={currentPage}
-        totalPages={totalPages}
-        onPageChange={handlePageChange}
-      />
-
-      {/* Social Media Section */}
-      <div className="mt-12 bg-gray-50 rounded-xl p-8">
-        <div className="max-w-4xl mx-auto">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6">
-            Suivez Pierre Jovanovic
-          </h2>
-          <div className="flex flex-wrap gap-6 justify-center">
-            <a
-              href="https://x.com/pierrejovanovic"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center text-gray-600 hover:text-blue-600"
-            >
-              <FaTwitter className="w-6 h-6 mr-2" />
-              <span>@pierrejovanovic</span>
-            </a>
-            <a
-              href="https://www.linkedin.com/in/pierre-jovanovic-33260b23/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center text-gray-600 hover:text-blue-600"
-            >
-              <FaLinkedin className="w-6 h-6 mr-2" />
-              <span>Pierre Jovanovic</span>
-            </a>
-            <a
-              href="https://www.instagram.com/jovapierre14/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center text-gray-600 hover:text-blue-600"
-            >
-              <FaInstagram className="w-6 h-6 mr-2" />
-              <span>@jovapierre14</span>
-            </a>
-            <a
-              href="https://www.facebook.com/Pierre-Jovanovic-297361163288"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center text-gray-600 hover:text-blue-600"
-            >
-              <FaFacebook className="w-6 h-6 mr-2" />
-              <span>Page Facebook</span>
-            </a>
-          </div>
-        </div>
-      </div>
-    </main>
+      </main>
+      <Footer />
+    </>
   );
 }

@@ -29,12 +29,14 @@ const Header = () => {
                 {menuOpen ? <X size={24} /> : <Menu size={24} />}
               </button>
               <div className="flex flex-col">
-                <h1 className="text-xl md:text-2xl font-bold text-blue-900">
-                  LA REVUE DE PRESSE
-                </h1>
-                <div className="text-xs text-gray-500">
-                  de Pierre Jovanovic - depuis 2008
-                </div>
+                <Link href="/" className="cursor-pointer">
+                  <h1 className="text-md md:text-2xl font-bold text-blue-900">
+                    LA REVUE DE PRESSE
+                  </h1>
+                  <div className="text-xs text-gray-500">
+                    de Pierre Jovanovic - depuis 2008
+                  </div>
+                </Link>
               </div>
             </div>
 
@@ -55,7 +57,7 @@ const Header = () => {
                 href="/bang-bank"
                 className="font-medium hover:text-blue-700"
               >
-                Bang Bank
+                Gang Bank
               </Link>
               <Link href="/contact" className="font-medium hover:text-blue-700">
                 Contact

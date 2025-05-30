@@ -1,3 +1,5 @@
+import Footer from "@/components/footer/Footer";
+import Header from "@/components/header/Header";
 import Article from "@/components/main_page/Article";
 import HeroSection from "@/components/main_page/HeroSection";
 import LatestAlerte from "@/components/main_page/LatestAlerte";
@@ -19,113 +21,124 @@ const LoadingFallback = ({ children }) => (
 
 export default function HomePage() {
   return (
-    <main className="font-sans bg-gray-100 text-gray-900 min-h-screen">
-      {/* Contenu principal */}
-      <div className="container mx-auto px-4 py-6">
-        {/* Section Hero */}
-        <Suspense
-          fallback={
-            <LoadingFallback>Chargement de la section héro...</LoadingFallback>
-          }
-        >
-          <HeroSection />
-        </Suspense>
+    <>
+      <Header />
+      <main className="font-sans bg-gray-100 text-gray-900 min-h-screen">
+        {/* Contenu principal */}
+        <div className="container mx-auto px-4 py-6">
+          {/* Section Hero */}
+          <Suspense
+            fallback={
+              <LoadingFallback>
+                Chargement de la section héro...
+              </LoadingFallback>
+            }
+          >
+            <HeroSection />
+          </Suspense>
 
-        <div className="flex flex-col lg:flex-row gap-8">
-          {/* Colonne de gauche - Contenu principal */}
-          <section className="lg:w-2/3" aria-label="Contenu principal">
-            {/* Dernière alerte */}
-            <Suspense
-              fallback={
-                <LoadingFallback>Chargement des alertes...</LoadingFallback>
-              }
-            >
-              <LatestAlerte />
-            </Suspense>
+          <div className="flex flex-col lg:flex-row gap-8">
+            {/* Colonne de gauche - Contenu principal */}
+            <section className="lg:w-2/3" aria-label="Contenu principal">
+              {/* Dernière alerte */}
+              <Suspense
+                fallback={
+                  <LoadingFallback>Chargement des alertes...</LoadingFallback>
+                }
+              >
+                <LatestAlerte />
+              </Suspense>
 
-            {/* Onglets */}
-            <Suspense
-              fallback={
-                <LoadingFallback>Chargement des onglets...</LoadingFallback>
-              }
-            >
-              <TabsComponent />
-            </Suspense>
+              {/* Onglets */}
+              <Suspense
+                fallback={
+                  <LoadingFallback>Chargement des onglets...</LoadingFallback>
+                }
+              >
+                <TabsComponent />
+              </Suspense>
 
-            {/* Article en vedette */}
-            <Suspense
-              fallback={
-                <LoadingFallback>Chargement de l'article...</LoadingFallback>
-              }
-            >
-              <Article />
-            </Suspense>
+              {/* Article en vedette */}
+              <Suspense
+                fallback={
+                  <LoadingFallback>Chargement de l'article...</LoadingFallback>
+                }
+              >
+                <Article />
+              </Suspense>
 
-            {/* Pagination */}
-            <Suspense
-              fallback={
-                <LoadingFallback>
-                  Chargement de la pagination...
-                </LoadingFallback>
-              }
-            >
-              <nav aria-label="Navigation des pages">
-                <Pagination />
-              </nav>
-            </Suspense>
-          </section>
+              {/* Pagination */}
+              <Suspense
+                fallback={
+                  <LoadingFallback>
+                    Chargement de la pagination...
+                  </LoadingFallback>
+                }
+              >
+                <nav aria-label="Navigation des pages">
+                  <Pagination />
+                </nav>
+              </Suspense>
+            </section>
 
-          {/* Colonne de droite - Barre latérale */}
-          <aside className="lg:w-1/3" aria-label="Informations complémentaires">
-            {/* Informations sur l'auteur */}
-            <Suspense
-              fallback={
-                <LoadingFallback>
-                  Chargement des informations de l'auteur...
-                </LoadingFallback>
-              }
+            {/* Colonne de droite - Barre latérale */}
+            <aside
+              className="lg:w-1/3"
+              aria-label="Informations complémentaires"
             >
-              <AutorInfo />
-            </Suspense>
+              {/* Informations sur l'auteur */}
+              <Suspense
+                fallback={
+                  <LoadingFallback>
+                    Chargement des informations de l'auteur...
+                  </LoadingFallback>
+                }
+              >
+                <AutorInfo />
+              </Suspense>
 
-            {/* Dates des rencontres */}
-            <Suspense
-              fallback={
-                <LoadingFallback>Chargement des rencontres...</LoadingFallback>
-              }
-            >
-              <Meetings />
-            </Suspense>
+              {/* Dates des rencontres */}
+              <Suspense
+                fallback={
+                  <LoadingFallback>
+                    Chargement des rencontres...
+                  </LoadingFallback>
+                }
+              >
+                <Meetings />
+              </Suspense>
 
-            {/* Livres */}
-            <Suspense
-              fallback={
-                <LoadingFallback>Chargement des livres...</LoadingFallback>
-              }
-            >
-              <NewBooks />
-            </Suspense>
+              {/* Livres */}
+              <Suspense
+                fallback={
+                  <LoadingFallback>Chargement des livres...</LoadingFallback>
+                }
+              >
+                <NewBooks />
+              </Suspense>
 
-            {/* Vidéos */}
-            <Suspense
-              fallback={
-                <LoadingFallback>Chargement des vidéos...</LoadingFallback>
-              }
-            >
-              <LatestVideos />
-            </Suspense>
+              {/* Vidéos */}
+              <Suspense
+                fallback={
+                  <LoadingFallback>Chargement des vidéos...</LoadingFallback>
+                }
+              >
+                <LatestVideos />
+              </Suspense>
 
-            {/* Adresses et téléphones */}
-            <Suspense
-              fallback={
-                <LoadingFallback>Chargement des contacts...</LoadingFallback>
-              }
-            >
-              <Contact />
-            </Suspense>
-          </aside>
+              {/* Adresses et téléphones */}
+              <Suspense
+                fallback={
+                  <LoadingFallback>Chargement des contacts...</LoadingFallback>
+                }
+              >
+                <Contact />
+              </Suspense>
+            </aside>
+          </div>
         </div>
-      </div>
-    </main>
+      </main>
+      <Footer />
+    </>
   );
 }

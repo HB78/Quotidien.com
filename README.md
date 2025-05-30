@@ -10,7 +10,7 @@ La Revue de Presse est une refonte moderne du site quotidien.com, réalisée à 
 
 ### Frontend
 
-- **Next.js 14** - Framework React moderne avec rendu côté serveur
+- **Next.js 15** - Framework React moderne avec rendu côté serveur
 - **React** - Bibliothèque JavaScript pour l'interface utilisateur
 - **Tailwind CSS** - Framework CSS utilitaire pour un design responsive
 - **Shadcn/ui** - Composants UI modernes et accessibles
