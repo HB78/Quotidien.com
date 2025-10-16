@@ -1,47 +1,51 @@
 "use client";
 
-import { HiChevronLeft, HiChevronRight } from "react-icons/hi";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 const Pagination = ({ currentPage, totalPages, onPageChange }) => {
   if (totalPages <= 1) return null;
 
   return (
-    <div className="mt-8 flex justify-center">
-      <nav className="flex items-center space-x-2">
+    <div className="flex justify-center">
+      <nav className="bg-white rounded-2xl shadow-lg p-3 border border-gray-100 inline-flex items-center gap-2">
         <button
           onClick={() => onPageChange(currentPage - 1)}
           disabled={currentPage === 1}
-          className={`p-2 rounded-lg ${
+          className={`p-2.5 rounded-xl transition-all duration-200 ${
             currentPage === 1
-              ? "text-gray-400 cursor-not-allowed"
-              : "text-gray-600 hover:bg-gray-100"
+              ? "text-gray-300 cursor-not-allowed"
+              : "text-gray-700 hover:bg-blue-50 hover:text-blue-600"
           }`}
         >
-          <HiChevronLeft className="w-6 h-6" />
+          <ChevronLeft className="w-5 h-5" />
         </button>
-        {[...Array(totalPages)].map((_, index) => (
-          <button
-            key={index + 1}
-            onClick={() => onPageChange(index + 1)}
-            className={`px-4 py-2 rounded-lg ${
-              currentPage === index + 1
-                ? "bg-blue-600 text-white"
-                : "text-gray-600 hover:bg-gray-100"
-            }`}
-          >
-            {index + 1}
-          </button>
-        ))}
+
+        <div className="flex items-center gap-1">
+          {[...Array(totalPages)].map((_, index) => (
+            <button
+              key={index + 1}
+              onClick={() => onPageChange(index + 1)}
+              className={`min-w-[2.5rem] h-10 rounded-xl font-semibold text-sm transition-all duration-200 ${
+                currentPage === index + 1
+                  ? "bg-gradient-to-r from-blue-600 to-blue-700 text-white shadow-md scale-110"
+                  : "text-gray-700 hover:bg-gray-100"
+              }`}
+            >
+              {index + 1}
+            </button>
+          ))}
+        </div>
+
         <button
           onClick={() => onPageChange(currentPage + 1)}
           disabled={currentPage === totalPages}
-          className={`p-2 rounded-lg ${
+          className={`p-2.5 rounded-xl transition-all duration-200 ${
             currentPage === totalPages
-              ? "text-gray-400 cursor-not-allowed"
-              : "text-gray-600 hover:bg-gray-100"
+              ? "text-gray-300 cursor-not-allowed"
+              : "text-gray-700 hover:bg-blue-50 hover:text-blue-600"
           }`}
         >
-          <HiChevronRight className="w-6 h-6" />
+          <ChevronRight className="w-5 h-5" />
         </button>
       </nav>
     </div>

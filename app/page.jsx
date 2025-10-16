@@ -12,10 +12,30 @@ import NewBooks from "@/components/main_page/rightColumn/NewBooks";
 import TabsComponent from "@/components/main_page/TabsComponent";
 import { Suspense } from "react";
 
-// Composant de fallback réutilisable
+// Composant de fallback réutilisable amélioré
 const LoadingFallback = ({ children }) => (
-  <div className="animate-pulse bg-gray-200 rounded-lg p-4 min-h-[200px] flex items-center justify-center">
-    <p className="text-gray-500">{children}</p>
+  <div className="relative bg-white rounded-2xl shadow-lg overflow-hidden min-h-[200px] border border-gray-100">
+    {/* Animation de fond */}
+    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-blue-50/50 to-transparent animate-shimmer"></div>
+
+    {/* Contenu skeleton */}
+    <div className="relative p-6 lg:p-8 space-y-4">
+      <div className="flex items-center gap-3">
+        <div className="w-12 h-12 bg-gray-200 rounded-full animate-pulse"></div>
+        <div className="flex-1 space-y-2">
+          <div className="h-4 bg-gray-200 rounded-lg w-1/3 animate-pulse"></div>
+          <div className="h-3 bg-gray-200 rounded-lg w-1/4 animate-pulse"></div>
+        </div>
+      </div>
+      <div className="space-y-2">
+        <div className="h-3 bg-gray-200 rounded-lg w-full animate-pulse"></div>
+        <div className="h-3 bg-gray-200 rounded-lg w-5/6 animate-pulse"></div>
+        <div className="h-3 bg-gray-200 rounded-lg w-4/6 animate-pulse"></div>
+      </div>
+      <div className="flex justify-center pt-4">
+        <p className="text-sm text-gray-500 font-medium">{children}</p>
+      </div>
+    </div>
   </div>
 );
 
@@ -23,9 +43,9 @@ export default function HomePage() {
   return (
     <>
       <Header />
-      <main className="font-sans bg-gray-100 text-gray-900 min-h-screen">
+      <main className="font-sans bg-gradient-to-br from-gray-50 via-blue-50/30 to-gray-100 text-gray-900 min-h-screen">
         {/* Contenu principal */}
-        <div className="container mx-auto px-4 py-6">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12">
           {/* Section Hero */}
           <Suspense
             fallback={
@@ -37,9 +57,9 @@ export default function HomePage() {
             <HeroSection />
           </Suspense>
 
-          <div className="flex flex-col lg:flex-row gap-8">
+          <div className="flex flex-col lg:flex-row gap-6 lg:gap-10 xl:gap-12">
             {/* Colonne de gauche - Contenu principal */}
-            <section className="lg:w-2/3" aria-label="Contenu principal">
+            <section className="lg:w-2/3 space-y-6" aria-label="Contenu principal">
               {/* Dernière alerte */}
               <Suspense
                 fallback={
@@ -83,7 +103,7 @@ export default function HomePage() {
 
             {/* Colonne de droite - Barre latérale */}
             <aside
-              className="lg:w-1/3"
+              className="lg:w-1/3 space-y-6"
               aria-label="Informations complémentaires"
             >
               {/* Informations sur l'auteur */}

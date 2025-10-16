@@ -1,60 +1,36 @@
 "use client";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { TrendingUp, Landmark, Coins, Newspaper } from "lucide-react";
 
 const TabsComponent = () => {
+  const categories = [
+    { value: "latest", label: "Derniers Articles", icon: Newspaper },
+    { value: "economy", label: "Économie", icon: TrendingUp },
+    { value: "banks", label: "Banques", icon: Landmark },
+    { value: "gold", label: "Or & Argent", icon: Coins }
+  ];
+
   return (
-    <Tabs defaultValue="latest" className="w-full pb-3">
-      <TabsList className="grid w-full grid-cols-2 md:grid-cols-4 gap-1 md:gap-2 p-1 md:p-2">
-        <TabsTrigger
-          value="latest"
-          className="text-xs md:text-sm whitespace-nowrap px-2 md:px-4 py-1.5 md:py-2"
-        >
-          Derniers Articles
-        </TabsTrigger>
-        <TabsTrigger
-          value="economy"
-          className="text-xs md:text-sm whitespace-nowrap px-2 md:px-4 py-1.5 md:py-2"
-        >
-          Économie
-        </TabsTrigger>
-        <TabsTrigger
-          value="banks"
-          className="text-xs md:text-sm whitespace-nowrap px-2 md:px-4 py-1.5 md:py-2"
-        >
-          Banques
-        </TabsTrigger>
-        <TabsTrigger
-          value="gold"
-          className="text-xs md:text-sm whitespace-nowrap px-2 md:px-4 py-1.5 md:py-2"
-        >
-          Or & Argent
-        </TabsTrigger>
+    <Tabs defaultValue="latest" className="w-full">
+      <TabsList className="inline-flex w-full items-center justify-start gap-2 p-1.5 bg-gray-100 rounded-xl overflow-x-auto">
+        {categories.map(({ value, label, icon: Icon }) => (
+          <TabsTrigger
+            key={value}
+            value={value}
+            className="flex items-center gap-2 text-sm font-medium px-4 py-2 rounded-lg bg-transparent text-gray-700 hover:bg-white/50 data-[state=active]:bg-white data-[state=active]:text-blue-700 data-[state=active]:shadow-sm transition-all duration-200 whitespace-nowrap"
+          >
+            <Icon className="h-4 w-4" />
+            <span>{label}</span>
+          </TabsTrigger>
+        ))}
       </TabsList>
-      <TabsContent value="latest" className="mt-4">
-        <div className="p-2 md:p-4">
-          {/* Contenu des derniers articles */}
-          <p>Contenu des derniers articles</p>
-        </div>
-      </TabsContent>
-      <TabsContent value="economy" className="mt-4">
-        <div className="p-2 md:p-4">
-          {/* Contenu de l'économie */}
-          <p>Contenu de l'économie</p>
-        </div>
-      </TabsContent>
-      <TabsContent value="banks" className="mt-4">
-        <div className="p-2 md:p-4">
-          {/* Contenu des banques */}
-          <p>Contenu des banques</p>
-        </div>
-      </TabsContent>
-      <TabsContent value="gold" className="mt-4">
-        <div className="p-2 md:p-4">
-          {/* Contenu de l'or et argent */}
-          <p>Contenu de l'or et argent</p>
-        </div>
-      </TabsContent>
+
+      {categories.map(({ value, label }) => (
+        <TabsContent key={value} value={value} className="mt-0">
+          {/* Le contenu sera affiché ici si nécessaire */}
+        </TabsContent>
+      ))}
     </Tabs>
   );
 };
