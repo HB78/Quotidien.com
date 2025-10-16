@@ -1,9 +1,14 @@
 "use client";
 
+import { useGSAP } from '@gsap/react';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Image from "next/image";
 import Link from "next/link";
-import { Suspense } from "react";
+import { Suspense, useRef } from "react";
 import { HiShoppingCart } from "react-icons/hi";
+
+gsap.registerPlugin(ScrollTrigger);
 
 // Composant de fallback pour la grille de livres
 const BookGridFallback = () => {
@@ -41,15 +46,73 @@ const BookGridFallback = () => {
  * @param {Function} onAddToCart - Fonction appelée lors de l'ajout d'un livre au panier
  */
 const BookGridContent = ({ books, onAddToCart }) => {
+  const booksRef = useRef([]);
+
+  useGSAP(() => {
+    booksRef.current.forEach((bookCard, index) => {
+      if (!bookCard) return;
+
+      // Animation d'entrée au scroll avec effet 3D
+      gsap.fromTo(bookCard,
+        {
+          opacity: 0,
+          y: 100,
+          rotationY: -25,
+          scale: 0.9
+        },
+        {
+          opacity: 1,
+          y: 0,
+          rotationY: 0,
+          scale: 1,
+          duration: 0.8,
+          ease: 'power3.out',
+          scrollTrigger: {
+            trigger: bookCard,
+            start: 'top 90%',
+            toggleActions: 'play none none reverse'
+          },
+          delay: (index % 3) * 0.1 // Stagger par ligne
+        }
+      );
+
+      // Animation au hover
+      const handleMouseEnter = () => {
+        gsap.to(bookCard, {
+          y: -15,
+          scale: 1.05,
+          rotationY: 5,
+          boxShadow: '0 30px 60px rgba(0,0,0,0.3)',
+          duration: 0.5,
+          ease: 'power2.out'
+        });
+      };
+
+      const handleMouseLeave = () => {
+        gsap.to(bookCard, {
+          y: 0,
+          scale: 1,
+          rotationY: 0,
+          boxShadow: '0 10px 15px rgba(0,0,0,0.1)',
+          duration: 0.5,
+          ease: 'power2.out'
+        });
+      };
+
+      bookCard.addEventListener('mouseenter', handleMouseEnter);
+      bookCard.addEventListener('mouseleave', handleMouseLeave);
+    });
+  }, { dependencies: [books] });
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-      {books.map((book) => (
+      {books.map((book, index) => (
         <Link
           key={book.id}
           href={`/jovanovic/livres/${book.id}`}
           className="hover:text-blue-600"
         >
-          <div className="bg-white rounded-xl shadow-lg overflow-hidden h-full flex flex-col">
+          <div ref={el => booksRef.current[index] = el} className="bg-white rounded-xl shadow-lg overflow-hidden h-full flex flex-col" style={{ transformStyle: 'preserve-3d' }}>
             <div className="relative aspect-[2/3] w-full">
               <Image
                 src={book.image}

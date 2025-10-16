@@ -1,3 +1,9 @@
+"use client";
+
+import { useGSAP } from '@gsap/react';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { useRef } from 'react';
 import Footer from "@/components/footer/Footer";
 import Header from "@/components/header/Header";
 import { events } from "@/data/meetings";
@@ -9,13 +15,91 @@ import {
   HiLocationMarker,
 } from "react-icons/hi";
 
+gsap.registerPlugin(ScrollTrigger);
+
 export default function RendezVousPage() {
+  const titleRef = useRef(null);
+  const heroRef = useRef(null);
+  const eventsRef = useRef([]);
+
+  useGSAP(() => {
+    // Animation du titre
+    gsap.from(titleRef.current, {
+      opacity: 0,
+      x: -100,
+      duration: 1,
+      ease: 'power3.out'
+    });
+
+    // Animation de la hero section
+    gsap.from(heroRef.current, {
+      opacity: 0,
+      scale: 0.9,
+      y: 50,
+      duration: 1,
+      ease: 'back.out(1.2)',
+      delay: 0.3
+    });
+
+    // Animation des cartes d'événements avec stagger
+    eventsRef.current.forEach((card, index) => {
+      if (!card) return;
+
+      gsap.fromTo(card,
+        {
+          opacity: 0,
+          y: 100,
+          rotationX: -20,
+          scale: 0.9
+        },
+        {
+          opacity: 1,
+          y: 0,
+          rotationX: 0,
+          scale: 1,
+          duration: 0.8,
+          ease: 'power3.out',
+          scrollTrigger: {
+            trigger: card,
+            start: 'top 85%',
+            toggleActions: 'play none none reverse'
+          },
+          delay: index * 0.15
+        }
+      );
+
+      // Animation au hover
+      const handleMouseEnter = () => {
+        gsap.to(card, {
+          y: -12,
+          scale: 1.03,
+          boxShadow: '0 25px 50px rgba(59, 130, 246, 0.3)',
+          duration: 0.4,
+          ease: 'power2.out'
+        });
+      };
+
+      const handleMouseLeave = () => {
+        gsap.to(card, {
+          y: 0,
+          scale: 1,
+          boxShadow: '0 10px 15px rgba(0, 0, 0, 0.1)',
+          duration: 0.4,
+          ease: 'power2.out'
+        });
+      };
+
+      card.addEventListener('mouseenter', handleMouseEnter);
+      card.addEventListener('mouseleave', handleMouseLeave);
+    });
+  });
+
   return (
     <>
       <Header />
       <main className="min-h-screen bg-gray-100 py-8">
         <div className="container mx-auto px-4">
-          <h1 className="text-3xl font-bold text-blue-900 mb-8">Rendez-vous</h1>
+          <h1 ref={titleRef} className="text-3xl font-bold text-blue-900 mb-8">Rendez-vous</h1>
           {/* Navigation */}
           <div className="mb-8">
             <Link
@@ -28,7 +112,7 @@ export default function RendezVousPage() {
           </div>
 
           {/* Hero Section */}
-          <div className="bg-blue-900 text-white rounded-xl p-8 mb-12">
+          <div ref={heroRef} className="bg-blue-900 text-white rounded-xl p-8 mb-12">
             <div className="max-w-4xl mx-auto">
               <h1 className="text-4xl font-bold mb-4">
                 Prochains Rendez-vous et Dédicaces
@@ -43,10 +127,12 @@ export default function RendezVousPage() {
           {/* Liste des événements */}
           <div className="max-w-7xl mx-auto">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {events.map((event) => (
+              {events.map((event, index) => (
                 <div
                   key={event.id}
-                  className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow border border-gray-100"
+                  ref={el => eventsRef.current[index] = el}
+                  className="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100"
+                  style={{ transformStyle: 'preserve-3d' }}
                 >
                   {/* Informations */}
                   <div className="p-6">

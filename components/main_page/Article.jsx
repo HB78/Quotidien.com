@@ -1,12 +1,81 @@
 "use client";
 
+import { useGSAP } from '@gsap/react';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { useRef } from 'react';
 import { ArrowRight, Calendar } from "lucide-react";
 import Link from "next/link";
 
+gsap.registerPlugin(ScrollTrigger);
+
 const Article = () => {
+  const articlesRef = useRef([]);
+
+  useGSAP(() => {
+    articlesRef.current.forEach((article, index) => {
+      if (!article) return;
+
+      // Animation d'apparition au scroll
+      gsap.fromTo(article,
+        {
+          opacity: 0,
+          y: 100,
+          rotationX: -15,
+          scale: 0.95
+        },
+        {
+          opacity: 1,
+          y: 0,
+          rotationX: 0,
+          scale: 1,
+          duration: 1,
+          ease: 'power3.out',
+          scrollTrigger: {
+            trigger: article,
+            start: 'top 85%',
+            end: 'top 50%',
+            scrub: 1,
+            toggleActions: 'play none none reverse'
+          }
+        }
+      );
+
+      // Animation au hover
+      const handleMouseEnter = () => {
+        gsap.to(article, {
+          y: -10,
+          scale: 1.02,
+          boxShadow: '0 25px 50px rgba(0,0,0,0.2)',
+          duration: 0.4,
+          ease: 'power2.out'
+        });
+      };
+
+      const handleMouseLeave = () => {
+        gsap.to(article, {
+          y: 0,
+          scale: 1,
+          boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
+          duration: 0.4,
+          ease: 'power2.out'
+        });
+      };
+
+      article.addEventListener('mouseenter', handleMouseEnter);
+      article.addEventListener('mouseleave', handleMouseLeave);
+
+      // Cleanup
+      return () => {
+        article.removeEventListener('mouseenter', handleMouseEnter);
+        article.removeEventListener('mouseleave', handleMouseLeave);
+      };
+    });
+  });
+
   return (
     <>
-      <article className="bg-white rounded-lg shadow-md overflow-hidden mb-6">
+      <article ref={el => articlesRef.current[0] = el} className="bg-white rounded-lg shadow-md overflow-hidden mb-6">
         <div className="p-6">
           <h2 className="text-2xl font-bold text-gray-900 mb-2">
             LE LIVRE 2008 EN PLEIN DANS LE MILLE - RETRAITE À 70 ANS
@@ -64,7 +133,7 @@ const Article = () => {
       </article>
 
       {/* Second Article */}
-      <article className="bg-white rounded-lg shadow-md overflow-hidden mb-6">
+      <article ref={el => articlesRef.current[1] = el} className="bg-white rounded-lg shadow-md overflow-hidden mb-6">
         <div className="p-6">
           <h2 className="text-2xl font-bold text-gray-900 mb-2">
             LE FMI AVERTIT LA FRANCE SUR SA DETTE - MISE SOUS TUTELLE COMME LA
@@ -103,7 +172,7 @@ const Article = () => {
       </article>
 
       {/* Third Article */}
-      <article className="bg-white rounded-lg shadow-md overflow-hidden mb-6">
+      <article ref={el => articlesRef.current[2] = el} className="bg-white rounded-lg shadow-md overflow-hidden mb-6">
         <div className="p-6">
           <h2 className="text-2xl font-bold text-gray-900 mb-2">
             DARMANIN VEUT SUPPRIMER L'ARGENT LIQUIDE

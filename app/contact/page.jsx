@@ -1,5 +1,11 @@
+"use client";
+
 import Footer from "@/components/footer/Footer";
 import Header from "@/components/header/Header";
+import { useGSAP } from "@gsap/react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useRef } from "react";
 import {
   FaFacebook,
   FaInstagram,
@@ -9,18 +15,83 @@ import {
 } from "react-icons/fa";
 import { HiHeart, HiLocationMarker, HiMail } from "react-icons/hi";
 
+gsap.registerPlugin(ScrollTrigger);
+
 export default function ContactPage() {
+  const titleRef = useRef(null);
+  const donSectionRef = useRef(null);
+  const mainSectionRef = useRef(null);
+  const presseSectionRef = useRef(null);
+  const socialLinksRef = useRef([]);
+
+  useGSAP(() => {
+    // Animation du titre
+    gsap.from(titleRef.current, {
+      opacity: 0,
+      y: -50,
+      duration: 1,
+      ease: "power3.out",
+    });
+
+    // Animation des sections avec stagger
+    const sections = [
+      donSectionRef.current,
+      mainSectionRef.current,
+      presseSectionRef.current,
+    ];
+    gsap.from(sections, {
+      opacity: 0,
+      y: 80,
+      stagger: 0.2,
+      duration: 1,
+      ease: "power3.out",
+      scrollTrigger: {
+        trigger: sections[0],
+        start: "top 80%",
+      },
+    });
+
+    // Animation des liens sociaux au hover
+    socialLinksRef.current.forEach((link) => {
+      if (!link) return;
+
+      const handleMouseEnter = () => {
+        gsap.to(link, {
+          x: 10,
+          scale: 1.05,
+          duration: 0.3,
+          ease: "power2.out",
+        });
+      };
+
+      const handleMouseLeave = () => {
+        gsap.to(link, {
+          x: 0,
+          scale: 1,
+          duration: 0.3,
+          ease: "power2.out",
+        });
+      };
+
+      link.addEventListener("mouseenter", handleMouseEnter);
+      link.addEventListener("mouseleave", handleMouseLeave);
+    });
+  });
+
   return (
     <>
       <Header />
       <main className="min-h-screen bg-gray-100 py-8">
         <div className="container mx-auto px-4">
-          <h1 className="text-3xl font-bold text-blue-900 mb-8">Contact</h1>
+          <h1 ref={titleRef} className="text-3xl font-bold text-blue-900 mb-8">
+            Contact
+          </h1>
           <div className="max-w-4xl mx-auto">
-            <h1 className="text-3xl font-bold text-gray-900 mb-8">Contact</h1>
-
             {/* Section Dons */}
-            <div className="bg-white rounded-xl shadow-md p-8 mb-8">
+            <div
+              ref={donSectionRef}
+              className="bg-white rounded-xl shadow-md p-8 mb-8"
+            >
               <div className="flex items-start space-x-4">
                 <HiHeart className="w-8 h-8 text-red-500 mt-1" />
                 <div>
@@ -46,7 +117,10 @@ export default function ContactPage() {
             </div>
 
             {/* Section principale */}
-            <div className="bg-white rounded-xl shadow-md p-8 mb-8">
+            <div
+              ref={mainSectionRef}
+              className="bg-white rounded-xl shadow-md p-8 mb-8"
+            >
               <div className="grid md:grid-cols-2 gap-8">
                 {/* Informations de contact */}
                 <div>
@@ -91,30 +165,33 @@ export default function ContactPage() {
 
                   <div className="space-y-6">
                     <a
+                      ref={(el) => (socialLinksRef.current[0] = el)}
                       href="https://x.com/pierrejovanovic"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center text-gray-600 hover:text-blue-600"
+                      className="flex items-center text-gray-600 hover:text-blue-600 transition-colors"
                     >
                       <FaTwitter className="w-6 h-6 mr-4" />
                       <span>@pierrejovanovic</span>
                     </a>
 
                     <a
+                      ref={(el) => (socialLinksRef.current[1] = el)}
                       href="https://www.linkedin.com/in/pierre-jovanovic-33260b23/"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center text-gray-600 hover:text-blue-600"
+                      className="flex items-center text-gray-600 hover:text-blue-600 transition-colors"
                     >
                       <FaLinkedin className="w-6 h-6 mr-4" />
                       <span>Pierre Jovanovic</span>
                     </a>
 
                     <a
+                      ref={(el) => (socialLinksRef.current[2] = el)}
                       href="https://www.instagram.com/jovapierre14/"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center text-gray-600 hover:text-blue-600"
+                      className="flex items-center text-gray-600 hover:text-blue-600 transition-colors"
                     >
                       <FaInstagram className="w-6 h-6 mr-4" />
                       <span>@jovapierre14</span>
@@ -150,7 +227,10 @@ export default function ContactPage() {
             </div>
 
             {/* Section Attachée de presse */}
-            <div className="bg-white rounded-xl shadow-md p-8">
+            <div
+              ref={presseSectionRef}
+              className="bg-white rounded-xl shadow-md p-8"
+            >
               <h2 className="text-xl font-semibold text-gray-900 mb-6">
                 Attachée de presse
               </h2>
